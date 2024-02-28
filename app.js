@@ -22,7 +22,7 @@ async function main() {
     rl.question('How may I help? ', async (userRes) => {
         const completion = await openai.chat.completions.create({
             messages: [
-                { role: 'system', content: 'Say Hi Ivan' },
+                { role: 'system', content: 'You are a helpful assistant named Wendy ' },
                 { role: 'user', content: userRes },
             ],
             model: 'gpt-3.5-turbo',
@@ -33,8 +33,8 @@ async function main() {
 
         const mp3 = await openai.audio.speech.create({
             model: 'tts-1',
-            voice: 'alloy',
-            input: completion.choices[0].message.content, // You might want to change this to use the user's input or the AI response
+            voice: 'nova',
+            input: completion.choices[0].message.content,
         });
 
         console.log(speechFile);
