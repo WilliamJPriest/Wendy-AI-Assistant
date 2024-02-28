@@ -6,6 +6,7 @@
     "fs": "^0.0.1-security",
     "node-fetch": "^3.3.2",
     "openai": "^4.28.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "play-sound": "^1.1.6"
   }
 }

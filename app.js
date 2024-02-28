@@ -1,38 +1,54 @@
-import OpenAI from "openai";
-import 'dotenv/config'
+import 'dotenv/config';
 import readline from 'readline';
-import fetch from 'node-fetch';
-import fs from "fs";
+import fs from 'fs';
 import path from 'path';
+import { OpenAI } from 'openai';
+import fetch from 'node-fetch';
+import Player from 'play-sound';
 
-const openai = new OpenAI(
-);
+const openai = new OpenAI();
 
-const speechFile = path.resolve("./speech.mp3");
+// Configure play-sound to use the default system player
+const player = new Player();
+
+const speechFile = path.resolve('./speech.mp3');
 
 async function main() {
     const rl = readline.createInterface({
         input: process.stdin,
-        output: process.stdout
-      });
+        output: process.stdout,
+    });
+
     rl.question('How may I help? ', async (userRes) => {
         const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a helpful assistant."},{role: "user",content:userRes}],
+            messages: [
+                { role: 'system', content: 'Say Hi Ivan' },
+                { role: 'user', content: userRes },
+            ],
+            model: 'gpt-3.5-turbo',
+        });
 
-        model: "gpt-3.5-turbo",
-    });
         rl.close();
         console.log(completion.choices[0]);
+
         const mp3 = await openai.audio.speech.create({
-            model: "tts-1",
-            voice: "alloy",
-            input: "Today is a wonderful day to build something people love!",
-          });
+            model: 'tts-1',
+            voice: 'alloy',
+            input: completion.choices[0].message.content, // You might want to change this to use the user's input or the AI response
+        });
+
         console.log(speechFile);
+
         const buffer = Buffer.from(await mp3.arrayBuffer());
         await fs.promises.writeFile(speechFile, buffer);
-        
+
+
+        player.play(speechFile, (err) => {
+            if (err) {
+                console.error('Error playing audio:', err);
+            }
+        });
     });
-    
-}   
+}
+
 main();
