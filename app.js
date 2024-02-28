@@ -3,7 +3,6 @@ import readline from 'readline';
 import fs from 'fs';
 import path from 'path';
 import { OpenAI } from 'openai';
-import fetch from 'node-fetch';
 import Player from 'play-sound';
 
 const openai = new OpenAI();
