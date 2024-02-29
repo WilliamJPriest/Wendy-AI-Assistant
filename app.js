@@ -13,6 +13,14 @@ const player = new Player();
 const speechFile = path.resolve('./speech.mp3');
 
 async function main() {
+
+    const transcription = await openai.audio.transcriptions.create({
+        file: fs.createReadStream("audio.mp3"),
+        model: "whisper-1",
+      });
+
+      userRes = transcription.text
+
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
