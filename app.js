@@ -8,7 +8,7 @@ import Player from 'play-sound';
 const app = express();
 const port = 3000
 
-import FeedbackRoute from './Routes/Feedback'
+import FeedbackRoute from './Routes/feedback'
 
 app.use("/feedback",FeedbackRoute)
 
