@@ -1,14 +1,29 @@
 
 import express from 'express';
-import feedbackController from './Controllers/feedbackController'
+import feedbackController from '../Controllers/feedbackController.js'
 const router= express.Router()
+import multer from 'multer';    
+const storage = multer.diskStorage({
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    },
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    })     
+const upload = multer({ storage })
 
-router.post('/', async (req,res)=>{
+
+
+router.post('/', upload.any('file'), async (req,res)=>{
+
     res.send("Hello")
-    feedbackController(req,res)
+
+    console.log(upload) 
+    await feedbackController(req,res)
 
 
 
 })
 
-module.exports = router;
+export default router;
