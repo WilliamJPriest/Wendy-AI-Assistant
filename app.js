@@ -1,9 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
-import fs from 'fs';
-import path from 'path';
-import { OpenAI } from 'openai';
-import Player from 'play-sound';
+
 
 const app = express();
 const port = 3000
