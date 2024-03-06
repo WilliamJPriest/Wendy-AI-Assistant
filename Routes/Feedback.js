@@ -5,7 +5,7 @@ const router= express.Router()
 import multer from 'multer';    
 const storage = multer.diskStorage({
     filename: function (req, file, cb) {
-        cb(null, file.originalname)
+        cb(null, "speech.mp3")
     },
     destination: function (req, file, cb) {
         cb(null, 'uploads/')
@@ -17,7 +17,6 @@ const upload = multer({ storage: storage })
 
 router.post('/', upload.any('file'), async (req, res) => {
     try {
-        res.send("remember to set the form name to file")
         feedbackController(req, res)
     } catch (error) {
         console.error(error)

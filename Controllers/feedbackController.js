@@ -2,28 +2,19 @@ import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import { OpenAI } from 'openai';
-import Player from 'play-sound'; 
 
-const feedbackController =  (req,res)=>{
-    try{
-        res.send({ message: 'Successfully uploaded files' })
-        const openai = new OpenAI();
-
-        const player = new Player();
-
-        const speechFile = path.resolve('./speech.mp3');
-
-        async function main() {
-
+const feedbackController = async (req,res)=>{
+        try {
+            const openai = new OpenAI();
+            const speechFile = path.resolve('./outputs/response.mp3');
+    
             const transcription = await openai.audio.transcriptions.create({
-                file: fs.createReadStream("Rev.mp3"),
+                file: fs.createReadStream("./uploads/speech.mp3"),
                 model: "whisper-1",
             });
-
-            let userRes = transcription.text
-
-
-
+    
+            let userRes = transcription.text;
+    
             const completion = await openai.chat.completions.create({
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant named Wendy ' },
@@ -31,32 +22,23 @@ const feedbackController =  (req,res)=>{
                 ],
                 model: 'gpt-3.5-turbo',
             });
-
-
+    
             const mp3 = await openai.audio.speech.create({
                 model: 'tts-1',
                 voice: 'nova',
                 input: completion.choices[0].message.content,
             });
-
-
+    
             const buffer = Buffer.from(await mp3.arrayBuffer());
             await fs.promises.writeFile(speechFile, buffer);
+    
+            res.send({ message: 'Successfully uploaded files' });
+        } catch (err) {
+            console.error("Error:", err);
+            res.status(500).send("Internal Server Error");
+        }
+    };
+    
 
-
-            player.play(speechFile, (err) => {
-                if (err) {
-                    console.error('Error playing audio:', err);
-                }
-            });
-        };
-
-    main();
-
-    }catch{
-
-    }
-
-}
 
 export default feedbackController;

@@ -38,5 +38,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-speech.mp3
-Rev.mp3
+/uploads
+/outputs
