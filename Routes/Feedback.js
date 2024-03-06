@@ -1,6 +1,6 @@
 
 import express from 'express';
-import feedbackController from '../Controllers/feedbackController.js'
+import feedbackController from '../controllers/feedbackController.js'
 const router= express.Router()
 import multer from 'multer';    
 const storage = multer.diskStorage({
@@ -8,22 +8,21 @@ const storage = multer.diskStorage({
         cb(null, file.originalname)
     },
     destination: function (req, file, cb) {
-        cb(null, './uploads')
+        cb(null, 'uploads/')
     },
     })     
-const upload = multer({ storage })
+const upload = multer({ storage: storage })
 
 
 
-router.post('/', upload.any('file'), async (req,res)=>{
-
-    res.send("Hello")
-
-    console.log(upload) 
-    await feedbackController(req,res)
-
-
-
+router.post('/', upload.any('file'), async (req, res) => {
+    try {
+        res.send("remember to set the form name to file")
+        feedbackController(req, res)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Internal Server Error")
+    }
 })
 
 export default router;
