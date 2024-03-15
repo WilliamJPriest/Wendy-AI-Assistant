@@ -31,8 +31,10 @@ const feedbackController = async (req,res)=>{
     
             const buffer = Buffer.from(await mp3.arrayBuffer());
             await fs.promises.writeFile(speechFile, buffer);
+           
+
     
-            res.send({ message: 'Successfully uploaded files' });
+            res.sendFile( speechFile, "/outputs/response.mp3" );
         } catch (err) {
             console.error("Error:", err);
             res.status(500).send("Internal Server Error");

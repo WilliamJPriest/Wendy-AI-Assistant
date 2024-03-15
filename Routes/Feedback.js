@@ -17,6 +17,7 @@ const upload = multer({ storage: storage })
 
 router.post('/', upload.any('file'), async (req, res) => {
     try {
+        console.log(upload)
         feedbackController(req, res)
     } catch (error) {
         console.error(error)
