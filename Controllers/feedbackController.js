@@ -31,10 +31,15 @@ const feedbackController = async (req,res)=>{
     
             const buffer = Buffer.from(await mp3.arrayBuffer());
             await fs.promises.writeFile(speechFile, buffer);
+
+            const responseObj = {
+                messages: completion.messages,
+                audio: buffer.toString('base64'), // Convert buffer to base64 for JSON transport
+            };
            
 
     
-            res.sendFile( speechFile, "/outputs/response.mp3" );
+            res.json(responseObj);
         } catch (err) {
             console.error("Error:", err);
             res.status(500).send("Internal Server Error");
