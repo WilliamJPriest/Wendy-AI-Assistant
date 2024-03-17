@@ -7,12 +7,14 @@ const feedbackController = async (req,res)=>{
         try {
             const openai = new OpenAI();
             const speechFile = path.resolve('./outputs/response.mp3');
-    
+            
+            await convertBase64ToAudio(req.body.audio)
+
             const transcription = await openai.audio.transcriptions.create({
                 file: fs.createReadStream("./uploads/speech.mp3"),
                 model: "whisper-1",
             });
-    
+            
             let userRes = transcription.text;
     
             const completion = await openai.chat.completions.create({
@@ -46,6 +48,15 @@ const feedbackController = async (req,res)=>{
         }
     };
     
+const convertBase64ToAudio = async (base64String) =>{
+    const outputPath = './uploads/speech.mp3';
 
+    const base64Data = await base64String.replace(/^data:audio\/mpeg;base64,/, '');
+
+    const audioFromFrontend = Buffer.from(base64Data, 'base64');
+
+    fs.writeFileSync(outputPath, audioFromFrontend);
+
+}
 
 export default feedbackController;
